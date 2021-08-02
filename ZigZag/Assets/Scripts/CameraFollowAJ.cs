@@ -7,6 +7,7 @@ public class CameraFollowAJ : MonoBehaviour
     public GameObject AJ;
     Vector3 offset;
     public float smoothFactor = 0.5f;
+    public float lerpRate = 2f;
     public bool gameOver;
     public bool lookAtTarget = false;
 
@@ -19,17 +20,14 @@ public class CameraFollowAJ : MonoBehaviour
     {
         if (!gameOver)
         {
-            Vector3 newposition = AJ.transform.position + offset;
-            transform.position = Vector3.Slerp(transform.position, newposition, smoothFactor);
+            // Vector3 newposition = AJ.transform.position + offset;
+            // transform.position = Vector3.Slerp(transform.position, newposition, smoothFactor);
 
-            if (lookAtTarget)
-            {
-                transform.LookAt(AJ.transform);
-            }
-            // if (!gameOver)
+            // if (lookAtTarget)
             // {
-            //     Follow();
+            //     transform.LookAt(AJ.transform);
             // }
+            Follow();
         }
     }
 
@@ -43,13 +41,17 @@ public class CameraFollowAJ : MonoBehaviour
         {
             this.enabled = false;
         }
+        if (PlayerPrefs.GetString("Character") == "Remy")
+        {
+            this.enabled = false;
+        }
     }
 
-    // void Follow()
-    // {
-    //     Vector3 pos = transform.position;
-    //     Vector3 targetPos = AJ.transform.position - offset;
-    //     pos = Vector3.Lerp(pos, targetPos, lerpRate * Time.deltaTime);
-    //     transform.position = pos;
-    // }
+    void Follow()
+    {
+        Vector3 pos = transform.position;
+        Vector3 targetPos = AJ.transform.position + offset;
+        pos = Vector3.Lerp(pos, targetPos, lerpRate * Time.deltaTime);
+        transform.position = pos;
+    }
 }

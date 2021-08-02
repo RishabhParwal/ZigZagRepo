@@ -7,6 +7,7 @@ public class CameraFollowJames : MonoBehaviour
     public GameObject james;
     Vector3 offset;
     public float smoothFactor = 0.5f;
+    public float lerpRate = 2f;
     public bool gameOver;
     public bool lookAtTarget = false;
 
@@ -19,17 +20,14 @@ public class CameraFollowJames : MonoBehaviour
     {
         if (!gameOver)
         {
-            Vector3 newposition = james.transform.position + offset;
-            transform.position = Vector3.Slerp(transform.position, newposition, smoothFactor);
+            // Vector3 newposition = AJ.transform.position + offset;
+            // transform.position = Vector3.Slerp(transform.position, newposition, smoothFactor);
 
-            if (lookAtTarget)
-            {
-                transform.LookAt(james.transform);
-            }
-            // if (!gameOver)
+            // if (lookAtTarget)
             // {
-            //     Follow();
+            //     transform.LookAt(AJ.transform);
             // }
+            Follow();
         }
     }
     void Update()
@@ -42,13 +40,17 @@ public class CameraFollowJames : MonoBehaviour
         {
             this.enabled = false;
         }
+        if (PlayerPrefs.GetString("Character") == "Remy")
+        {
+            this.enabled = false;
+        }
     }
 
-    // void Follow()
-    // {
-    //     Vector3 pos = transform.position;
-    //     Vector3 targetPos = james.transform.position - offset;
-    //     pos = Vector3.Lerp(pos, targetPos, lerpRate * Time.deltaTime);
-    //     transform.position = pos;
-    // }
+    void Follow()
+    {
+        Vector3 pos = transform.position;
+        Vector3 targetPos = james.transform.position + offset;
+        pos = Vector3.Lerp(pos, targetPos, lerpRate * Time.deltaTime);
+        transform.position = pos;
+    }
 }

@@ -12,6 +12,7 @@ public class AJController : MonoBehaviour
     public float speed;
     bool started;
     bool gameOver;
+    bool directionX;
 
     public Rigidbody rb;
     Animator anim;
@@ -26,10 +27,11 @@ public class AJController : MonoBehaviour
 
     void Start()
     {
+        directionX = true;
         rb = this.GetComponent<Rigidbody>();
         anim = this.GetComponent<Animator>();
         started = false;
-        speed = 7;
+        speed = 5;
     }
 
     void Update()
@@ -47,16 +49,17 @@ public class AJController : MonoBehaviour
         //     }
         // }
 
-        if (rb.position.y < 0.3 && !gameOver)
+        if (rb.position.y < 0.45 && !gameOver)
         {
             gameOver = true;
             rb.velocity = new Vector3(0, -25f, 0);
 
             Camera.main.GetComponent<CameraFollowJames>().gameOver = true;
             Camera.main.GetComponent<CameraFollowAJ>().gameOver = true;
+            Camera.main.GetComponent<CameraFollowRemy>().gameOver = true;
 
             GameManager.instance.GameOver();
-            CancelInvoke("IncreaseSpeed");
+            // CancelInvoke("IncreaseSpeed");
         }
 
         if (started)
@@ -66,7 +69,7 @@ public class AJController : MonoBehaviour
                 SwitchDirection();
             }
 
-            InvokeRepeating("IncreaseSpeed", 0.1f, 1f);
+            // InvokeRepeating("IncreaseSpeed", 0.1f, 1f);
         }
     }
 
@@ -75,7 +78,6 @@ public class AJController : MonoBehaviour
         if (!started)
         {
             started = true;
-
             rb.velocity = new Vector3(speed, 0, 0);
 
             GameManager.instance.StartGame();
@@ -85,19 +87,31 @@ public class AJController : MonoBehaviour
 
     void SwitchDirection()
     {
-        if (rb.velocity.z > 0)
-        {
-            rb.velocity = new Vector3(speed, 0, 0);
-            transform.Rotate(0, 90, 0);
-        }
-        else if (rb.velocity.x > 0)
+        // if (rb.velocity.z != 0)
+        // {
+        //     rb.velocity = new Vector3(speed, 0, 0);
+        //     transform.Rotate(0, 90, 0);
+        // }
+        // else if (rb.velocity.x != 0)
+        // {
+        //     rb.velocity = new Vector3(0, 0, speed);
+        //     transform.Rotate(0, 270, 0);
+        // }
+        // else if (rb.velocity == Vector3.zero)
+        // {
+        //     rb.velocity = new Vector3(speed, 0, 0);
+        // }
+        if (directionX == true)
         {
             rb.velocity = new Vector3(0, 0, speed);
             transform.Rotate(0, 270, 0);
+            directionX = false;
         }
-        else if (rb.velocity == Vector3.zero)
+        else if (directionX == false)
         {
             rb.velocity = new Vector3(speed, 0, 0);
+            transform.Rotate(0, 90, 0);
+            directionX = true;
         }
     }
 
@@ -113,8 +127,8 @@ public class AJController : MonoBehaviour
         }
     }
 
-    void IncreaseSpeed()
-    {
-        speed = speed + 0.00005f;
-    }
+    // void IncreaseSpeed()
+    // {
+    //     speed = speed + 0.00005f;
+    // }
 }
